@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Collatz Conjecture Calculator
+        </title>
+        <style>
+            html{
+                margin:0%;
+                height:100%;
+                width:100%;
+            }
+
+            body{
+                display:grid;
+                grid-template-columns: auto;
+                grid-template-rows: 80px 60px auto;
+                grid-row-gap:2px;
+
+                background-image:linear-gradient(to bottom right , rgb(153, 0, 255), rgb(2, 141, 255));
+                min-height:100%;
+                /* margin:0px; */
+                height: 100%;
+                margin: 0;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+            }
+            /* width */
+            ::-webkit-scrollbar {
+            width: 10px;
+            }
+
+            /* Track */
+            ::-webkit-scrollbar-track {
+            background: rgb(0, 75, 136); 
+            border-radius:10px;
+            }
+            
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+            background: rgb(0, 195, 255); 
+            border-radius:10px;
+            }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+            background: rgb(255, 255, 255); 
+            }
+            h1{
+                font-size:30px;
+                font-family: Arial, Helvetica, sans-serif;
+                /* color:rgb(2, 141, 255); */
+                color:white;
+            }
+            div#header{
+                top:0px;
+                /* position:fixed; */
+                background-image:linear-gradient(to bottom , rgba(255, 255, 255,.5), rgba(255, 255, 255, .3));
+                width:100%;
+                backdrop-filter: blur(10px);
+                box-shadow: 2, 2,5,black;
+
+            }
+            div#input_area{
+                display:grid;
+                grid-template-columns: 80% 20%;
+                grid-template-rows: 40px;
+                width:100%;
+                grid-column-gap:25px;
+                overflow-x:clip;
+                object-fit: contain;
+                height:100%;
+            }
+            div#display_area{
+                display:block;
+                overflow:auto;
+                scrollbar-width: thin;
+                scrollbar-color: #6969dd #e0e0e0;
+            }
+
+            input#input{
+                width:100%;
+                /* left:10%;
+                right:10%;
+                position:static; */
+                padding:10px;
+                outline: none;
+                box-sizing: content-box;
+                border: 0px;
+                border-radius: 5px;
+                height:100%;
+                font-size:large;
+                font-weight:bold;
+                background-color: rgba(255, 255, 255, .8);
+                color:rgb(0, 89, 255);
+                text-align:center;
+            }
+            button#create{
+                height:100%;
+                width:90%;
+                font-size:large;
+                font-weight:bold;
+                background-color:rgba(247, 0, 255, 0.2);
+                padding:10px;
+                border:none;
+                border-radius:5px;
+                color:white;
+                box-sizing: content-box;
+                
+            }
+
+            button#create:hover{
+                width:90%;
+                font-size:large;
+                font-weight:bold;
+                background-color:rgba(255, 255, 255, 0.5);
+                box-sizing:content-box;
+                padding:10px;
+                border:none;
+                border-radius:5px;
+                color:rgb(132, 0, 255);
+                height:100%;
+            }
+            table#Table{
+                height:100%;
+                width:100%;
+                border-spacing: 10px;
+            }
+            tr#row{
+                height:100px;
+                width:10%;
+            }
+            td#data{
+                box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+                height:10%;
+                background-color: rgba(255, 255, 255, 0.5);
+                border-radius: 5px;
+                color:rgb(0, 102, 255);
+                font-size:200%;
+                text-align:center;
+                width:10%;
+            }
+            td#none{
+                height:10%;
+                background-color: rgba(255, 255, 255, 0);
+                border-radius: 5px;
+                color:rgba(0, 0, 0, 0);
+                width:10%;
+            }
+            div#summary{
+            	color:rgba(0,0,0,0);
+            	width:100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <h1>
+                Collatz Conjecture Calculator
+            </h1>
+        </div>
+        <div id="input_area">            
+        <input placeholder="Enter the number" type="number", id="input" min=2></input>
+        <button type="button" id="create" onclick="display_sequence()"> See the sequence </button>
+        </div>
+        
+        <div id="display_area">
+            <div id ='summary'align="center"></div>
+            <table id="Table">
+            <tbody id="TBody">
+            </tbody>
+            </tbody>
+            </table>
+        </div>
+
+        <script type="text/javascript">
+                function replace_substr(str,start,end,rstr){
+                    return str.slice(0,start)+rstr+str.slice(end,-1);
+                }
+
+                function arrange_array(series){
+                    let reverse=false;
+                    let current_index=0;
+                    let actual_index=0;
+                    output="";
+                    not_done=true;
+//                     console.log(series);
+                    
+                    while (not_done==true){
+                        console.log("current_index:"+current_index+" length:"+series.length);
+						if (actual_index>=series.length){
+						    if (reverse==true){
+                                // It is actually false the last time.
+                                index=output.lastIndexOf('\u21e8');
+                                output= replace_substr(output,index,index+1, "End")+output.charAt(output.length-1);
+                                console.log("[FALSE]index: "+index+" length: "+output.length);
+						    }
+						    else{
+                                // It is actually true the last time. 
+                                start=output.lastIndexOf("<tr id='row'>");  
+                                index=output.indexOf('\u21e6',start);
+                                output= replace_substr(output,index,index+1, "End")+output.charAt(output.length-1);
+                                console.log("[TRUE]index: "+index+" length: "+output.length);
+						    }
+							not_done =false;
+                        }
+                        else if (reverse==false){
+                            output+="<tr id='row'>";
+                            for (i=current_index; i<current_index+5;i++){
+                                if (series[i]==undefined){
+                                    output+="<td id='none'></td>";
+                                    output+="<td id='none'></td>";
+                                }else{
+                                    output+="<td id='data'>"+series[i]+"</td>";
+                                    output+="<td id='data'>\u21e8</td>";
+                                }
+                            }
+                            output+="</tr>";
+							current_index+=4;
+							actual_index+=5;
+                            reverse=true;
+                        }
+                        else {
+                            output+="<tr id=row>";
+                            for (i=current_index+5; i>current_index;i--){
+                                if (series[i]==undefined){
+                                    output+="<td id='none'></td>";
+                                    output+="<td id='none'></td>"; 
+                                }else{
+                                    output+="<td id='data'>\u21e6</td>";
+                                    output+="<td id='data'>"+series[i]+"</td>"; 
+                                }
+                            }
+                            output+="</tr>";
+							current_index+=6;
+							actual_index+=5;
+                            reverse=false;
+                        }
+                        
+                    }
+                    return output;
+                }
+                function display_sequence(){
+                    let number=document.getElementById("input").value;
+                    if (number<1){
+                    	alert("Please enter a number greater than or equal to 1");
+                    }else{
+                    series=generate_series(number);
+                    output="";
+                    output+=arrange_array(series);
+                    let summary=document.getElementById("summary");
+                    summary.innerHTML="The series reached 1 in "+series.length+" steps and the largest number reached is "+Math.max.apply(null,series)+".";
+                    summary.style="width:100%;background-color:rgba(255,255,255,0.5);color:rgb(0, 102, 255);font-weight:bold;border-radius:5px; box-shadow:2px 2px 5px black;padding:5px;font-size:25px;text-align:center;backdrop-filter:blur(5px);";
+                    let table=document.getElementById("TBody");
+                    table.innerHTML=output;
+                    }
+                }
+
+            function isOdd(number){
+                if (number %2!=0){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+            function generate_series(number){
+                let sequence=[number];
+                while (number>1){
+                    if (isOdd(number)){
+                        number=3*number+1;
+                        sequence.push(number);
+                        number=number/2;
+                        sequence.push(number);
+                    }
+                    else{
+                        number=number/2;
+                        sequence.push(number);
+                    }
+                }
+                return sequence;
+            }
+            
+        </script>
+    </body>
+
+</html> 
